@@ -1,0 +1,159 @@
+body {
+    padding: 0;
+    background: url(https://background.sdju.chat) no-repeat fixed;
+    background-size: cover;
+    font-family: Microsoft YaHei;
+}
+
+.container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 1000px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 20px black;
+}
+
+.left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    float: left;
+    background: cornflowerblue;
+    opacity: 0.8;
+    width: 400px;
+    height: 600px;
+    overflow: hidden;
+}
+
+.left img {
+    height: 250px;
+    width: 250px;
+    position: absolute;
+    bottom: 0;
+}
+
+.left h2 {
+    color: white;
+    margin-top: 100px;
+}
+
+.left p {
+    text-align: justify;
+    color: white;
+    margin-left: 20px;
+    margin-right: 20px;
+    font-size: 18px;
+}
+
+.right {
+    display: flex;
+    float: left;
+    background: white;
+    width: 600px;
+    height: 600px;
+    opacity: 0.8;
+    flex-direction: column;
+    align-items: center;
+}
+
+.right p {
+    font-size: 25px;
+    font-weight: 600;
+    margin-top: 100px;
+    text-underline-offset: 5px;
+    text-decoration: underline cornflowerblue;
+}
+
+.right form img {
+    height: 30px;
+    width: 30px;
+    border-right: cornflowerblue 1px solid;
+    vertical-align: middle;
+    padding-right: 5px;
+}
+
+form input[type="text"],
+form input[type="password"] {
+    outline: none;
+    border: none;
+    height: 30px;
+    width: 350px;
+    margin: 0;
+    font-size: 20px;
+    vertical-align: middle;
+}
+
+form input[type="submit"] {
+    color: white;
+    height: 45px;
+    width: 100%;
+    border: none;
+    background: cornflowerblue;
+    border-radius: 5px;
+    font-size: 18px;
+    opacity: 1;
+    transition: 0.5s;
+}
+
+form input[type="submit"]:hover {
+    opacity: 0.8;
+    cursor: pointer;
+}
+
+.right form .reg {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.right a {
+    text-decoration: none;
+    color: cornflowerblue;
+    margin-top: 10px;
+}
+
+.user {
+    margin-top: 50px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.password {
+    margin-top: 20px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.remember_psw {
+    margin: 20px 0;
+}
+
+input[type="checkbox"],
+label[for="psw_box"] {
+    vertical-align: middle;
+}
+
+input[type="checkbox"] {
+    height: 18px;
+    width: 18px;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+
+.footer p {
+    text-shadow: 0px 0px 5px black;
+    color: white;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+}

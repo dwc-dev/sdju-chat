@@ -1,0 +1,8 @@
+{
+  "mysqlAddress": "",
+  "mysqlPort": "",
+  "mysqlUserName": "",
+  "mysqlPassword": "",
+  "mysqlDataBase": "",
+  "profileImageUploadAddress": ""
+}
