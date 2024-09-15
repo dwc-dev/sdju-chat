@@ -1,0 +1,53 @@
+:root {
+    --bs-body-bg: #fff1;
+}
+
+@font-face {
+    font-family: myFont;
+    src: url(fonts/frostland-1gd62.ttf);
+}
+
+form h1 {
+    font-family: myFont;
+}
+
+html {
+    height: 100%;
+    min-width: 600px;
+}
+
+body {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    background-size: cover;
+    padding-top: 20px;
+    background-image: url(https://background.sdju.chat);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+    flex-direction: column;
+    font-family: Microsoft YaHei;
+}
+
+form {
+    width: 500px;
+    background-color: #fff8;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+}
+
+#avatar-preview {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+}
+
+#introduction {
+    max-height: 200px;
+}
