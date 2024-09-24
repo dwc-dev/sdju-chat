@@ -41,7 +41,7 @@ public class RegisterServlet extends HttpServlet {
         String urlString = "";
         boolean f = ImageUploader.uploadImage(base64, name, ConfigManager.getConfig().getProfileImageUploadAddress());
         if (f) {
-            urlString = "https://chat.picbox.fun/pic/" + name + ".webp";
+            urlString = ConfigManager.getConfig().getPicSiteUrl() + name + ".webp";
         } else {
             System.out.println("Fail to upload avatar");
             response.setStatus(502);

@@ -8,7 +8,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 public class ConfigManager {
-    public static ChatConfig getConfig() {
+    public static ChatConfig getConfigFromFile() {
         // 指定文件在resources文件夹下的路径（相对路径）
         String filePath = "config.json";
 
@@ -49,5 +49,20 @@ public class ConfigManager {
             return null;
 
         return JSON.parseObject(fileContent, ChatConfig.class);
+    }
+
+    public static ChatConfig getConfig() {
+        ChatConfig config = new ChatConfig();
+
+        // 从环境变量中获取相关信息
+        config.setMysqlAddress(System.getenv("MYSQL_ADDRESS"));
+        config.setMysqlPort(System.getenv("MYSQL_PORT"));
+        config.setMysqlUserName(System.getenv("MYSQL_USERNAME"));
+        config.setMysqlPassword(System.getenv("MYSQL_PASSWORD"));
+        config.setMysqlDataBase(System.getenv("MYSQL_DATABASE"));
+        config.setProfileImageUploadAddress(System.getenv("PROFILE_IMAGE_UPLOAD_ADDRESS"));
+        config.setPicSiteUrl(System.getenv("PIC_SITE_URL"));
+
+        return config;
     }
 }

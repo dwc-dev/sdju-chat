@@ -7,7 +7,7 @@ import java.net.URL;
 public class ImageUploader {
     public static boolean uploadImage(String imageData, String imageName, String serverUrl) {
         try {
-            URL url = new URL(serverUrl + "/upload");
+            URL url = new URL(serverUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-Type", "application/json");

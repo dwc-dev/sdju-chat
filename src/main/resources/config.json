@@ -4,5 +4,6 @@
   "mysqlUserName": "",
   "mysqlPassword": "",
   "mysqlDataBase": "",
-  "profileImageUploadAddress": ""
+  "profileImageUploadAddress": "",
+  "picSiteUrl": ""
 }

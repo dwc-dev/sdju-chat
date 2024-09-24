@@ -1,0 +1,29 @@
+# 使用最新的 Node.js 镜像
+FROM node:latest
+
+# 安装 PM2
+RUN npm install -g pm2
+
+# 将 nodejs 代码复制到容器内
+COPY src/main/nodejs/ /usr/src/app/
+
+# 分别进入三个子目录安装依赖
+WORKDIR /usr/src/app/FileManager
+RUN npm install
+
+WORKDIR /usr/src/app/PicManager
+RUN npm install
+
+WORKDIR /usr/src/app/Websocket
+RUN npm install
+
+# 设置工作目录
+WORKDIR /usr/src/app
+
+# 暴露端口
+EXPOSE 1001
+EXPOSE 1002
+EXPOSE 1003
+
+# 使用 PM2 启动所有应用
+ENTRYPOINT ["pm2-runtime", "ecosystem.config.js"]

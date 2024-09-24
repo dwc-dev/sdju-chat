@@ -1,0 +1,56 @@
+version: '3'
+
+services:
+  sdju-chat-nodejs: # Node.js服务
+    build:
+      context: .
+      dockerfile: Dockerfile.nodejs
+    image: sdju-chat-nodejs:latest
+    container_name: sdju-chat-nodejs
+    ports:
+      - "1001:1001"  # 映射端口1001，用于文件管理器
+      - "1002:1002"  # 映射端口1002，用于图片（用户头像、群聊头像）管理器
+      - "1003:1003"  # 映射端口1003，用于 WebSocket 服务
+    networks:
+      - sdju-chat-network
+    volumes:
+      - sdju-chat-files:/usr/src/app/FileManager/files
+      - sdju-chat-pic:/usr/src/app/PicManager/pic
+    environment:
+      - MYSQL_ADDRESS=your_address  # MySQL数据库的地址
+      - MYSQL_USERNAME=your_username  # MySQL用户名
+      - PASSWORD=your_password  # MySQL密码
+      - DATABASE=your_database  # 使用的数据库名称
+      - FILEMANAGER_SITE_URL=http://localhost:1001/  # 文件管理器（FileManager）的URL，这个地址会在程序中的某些地方使用，本地部署不用改，在服务器部署根据实际情况修改
+      - PIC_SITE_URL=http://localhost:1002/pic/  # 图片管理器（PicManager）的URL，这个地址会在程序中的某些地方使用，本地部署不用改，在服务器部署根据实际情况修改
+    restart: always
+
+  sdju-chat-tomcat: # Tomcat服务
+    build:
+      context: .
+      dockerfile: Dockerfile.tomcat
+    image: sdju-chat-tomcat:latest
+    container_name: sdju-chat-tomcat
+    ports:
+      - "8080:8080"  # 映射端口8080，用于访问 Tomcat 应用
+    networks:
+      - sdju-chat-network
+    environment:
+      - MYSQL_ADDRESS=your_address  # MySQL数据库的地址
+      - MYSQL_PORT=your_port  # MySQL的端口
+      - MYSQL_USERNAME=your_username  # 用于连接 MySQL 的用户名
+      - MYSQL_PASSWORD=your_password  # MySQL的密码
+      - MYSQL_DATABASE=your_database  # 使用的数据库名称
+      - PROFILE_IMAGE_UPLOAD_ADDRESS=http://sdju-chat-nodejs:1002/upload  # java后端上传用户头像的地址，一般不需要修改
+      - PIC_SITE_URL=http://localhost:1002/pic/  # 图片管理器（PicManager）的URL，这个地址会在程序中的某些地方使用，本地部署不用改，在服务器部署根据实际情况修改
+      - FRONTEND_WEBSOCKET_ADDRESS=ws://localhost:1003  # 前端连接 WebSocket 的地址，本地部署不用改，在服务器部署根据实际情况修改
+      - FRONTEND_FILE_UPLOAD_ADDRESS=http://localhost:1001/upload  # 前端上传文件的地址，本地部署不用改，在服务器部署根据实际情况修改
+    restart: always
+
+networks:
+  sdju-chat-network:
+    driver: bridge
+
+volumes:
+  sdju-chat-files:  # 用于文件管理器，存储用户上传的文件
+  sdju-chat-pic:  # 用于图片管理器，存储用户头像、群头像

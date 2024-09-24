@@ -1,0 +1,14 @@
+# 使用最新的 Tomcat 镜像
+FROM tomcat:latest
+
+# 删除默认的 webapps 下的示例应用
+RUN rm -rf /usr/local/tomcat/webapps/*
+
+# 将打包后的 .war 文件复制到容器 Tomcat 的 webapps 目录中
+COPY target/sdju-chat-1.0-SNAPSHOT.war /usr/local/tomcat/webapps/ROOT.war
+
+# 暴露 Tomcat 默认的 8080 端口
+EXPOSE 8080
+
+# 启动 Tomcat
+ENTRYPOINT ["catalina.sh", "run"]

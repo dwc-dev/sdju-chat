@@ -1,10 +1,8 @@
-const SERVER_ADDRESS = "wss://websocket.sdju.chat";
-
 var current_chat = {
-  type: undefined,
-  id: undefined,
-  name: undefined,
-  item: undefined,
+    type: undefined,
+    id: undefined,
+    name: undefined,
+    item: undefined,
 };
 
 var lastTime = 0;
@@ -16,300 +14,300 @@ inputNoticeFlag = true;
 const socket = new WebSocket(SERVER_ADDRESS);
 
 socket.addEventListener("open", (event) => {
-  let msg_login = {
-    key: user_key,
-    user_id: user_id,
-    option: "login",
-  };
-  socket.send(JSON.stringify(msg_login));
-  setInterval(function () {
-    socket.send(JSON.stringify({ msg: "heart" }));
-  }, 1000 * 10);
+    let msg_login = {
+        key: user_key,
+        user_id: user_id,
+        option: "login",
+    };
+    socket.send(JSON.stringify(msg_login));
+    setInterval(function () {
+        socket.send(JSON.stringify({msg: "heart"}));
+    }, 1000 * 10);
 });
 
 socket.addEventListener("close", (event) => {
-  console.log("WebSocket connection closed");
-  alert("与服务器断开连接！");
-  location.reload();
+    console.log("WebSocket connection closed");
+    alert("与服务器断开连接！\n" + SERVER_ADDRESS);
+    location.reload();
 });
 
 socket.addEventListener("message", (event) => {
-  msg_obj = JSON.parse(event.data);
-  messageType = msg_obj[0].msg_type;
-  if (messageType === "loginSuccess") {
-    let msg_get_list = {
-      key: user_key,
-      user_id: user_id,
-      option: "get_list",
-    };
-    let msg_get_headIcon = {
-      key: user_key,
-      user_id: user_id,
-      option: "get_headIcon",
-    };
-    socket.send(JSON.stringify(msg_get_list));
-    socket.send(JSON.stringify(msg_get_headIcon));
-  } else if (messageType === "list") {
-    msg_obj.forEach((item) => {
-      if (item.msg_type) return;
-      let chat_item = {
-        id: item.group_id,
-        name: item.group_name,
-        icon: item.group_icon,
-        type: "group",
-      };
-      createChatItem(chat_item);
-    });
-    const Toast = Swal.mixin({
-      toast: true,
-      position: "top-end",
-      showConfirmButton: false,
-      timer: 3000,
-      timerProgressBar: false,
-    });
-    document.getElementById("loader").style.display = "none";
-    document.getElementById("chat-container").style.display = "";
-    Toast.fire({
-      icon: "success",
-      title: "登录成功！",
-    });
-  } else if (messageType === "headIconUrl") {
-    let headIcon = document.getElementById("headIcon");
-    headIcon.setAttribute("src", msg_obj[1].user_icon);
-  } else if (messageType === "history_group") {
-    document.querySelector(".lite-chatbox").innerHTML = "";
-    let last = 0;
-    msg_obj.forEach((item) => {
-      if (item.msg_type) {
-        lastTime = 0;
-        return;
-      }
-      if (item.timestamp - last > 300000) {
-        let date = new Date(item.timestamp);
-        Y = date.getFullYear() + "/";
-        M = date.getMonth() + 1 + "/";
-        D = date.getDate() + " ";
-        h = date.getHours() + ":";
-        m =
-          date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
-        const tip = {
-          messageType: "tipsNormal",
-          html: Y + M + D + h + m,
+    msg_obj = JSON.parse(event.data);
+    messageType = msg_obj[0].msg_type;
+    if (messageType === "loginSuccess") {
+        let msg_get_list = {
+            key: user_key,
+            user_id: user_id,
+            option: "get_list",
         };
-        addTip(".lite-chatbox", tip, "beforeend");
-        last = item.timestamp;
-        lastTime = last;
-      }
-      var chat_msg = {
-        messageType: "raw",
-        headIcon: item.user_icon,
-        name: item.nickname,
-        position: user_id === item.sender_id ? "right" : "left",
-        html: item.content,
-        user_id: item.sender_id,
-      };
-      addMessage(".lite-chatbox", chat_msg, "beforeend");
-    });
-    let chatBox = document.querySelector(".lite-chatbox");
-    setTimeout(function () {
-      if (chatBox.scrollHeight > chatBox.clientHeight) {
-        chatBox.scrollTop = chatBox.scrollHeight;
-      }
-    }, 300);
-  } else if (messageType === "new_msg_group") {
-    if (
-      msg_obj[1].group_id != current_chat.id ||
-      current_chat.type != "group"
-    ) {
-      return;
-    }
-    let flag = false;
-    let chatBox = document.querySelector(".lite-chatbox");
-    scrollCheck =
-      Math.abs(
-        chatBox.scrollTop + chatBox.clientHeight - chatBox.scrollHeight
-      ) <= 60;
-    if (
-      chatBox.scrollHeight > chatBox.clientHeight &&
-      (scrollCheck || user_id === msg_obj[1].sender_id)
-    ) {
-      flag = true;
-    }
+        let msg_get_headIcon = {
+            key: user_key,
+            user_id: user_id,
+            option: "get_headIcon",
+        };
+        socket.send(JSON.stringify(msg_get_list));
+        socket.send(JSON.stringify(msg_get_headIcon));
+    } else if (messageType === "list") {
+        msg_obj.forEach((item) => {
+            if (item.msg_type) return;
+            let chat_item = {
+                id: item.group_id,
+                name: item.group_name,
+                icon: item.group_icon,
+                type: "group",
+            };
+            createChatItem(chat_item);
+        });
+        const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: false,
+        });
+        document.getElementById("loader").style.display = "none";
+        document.getElementById("chat-container").style.display = "";
+        Toast.fire({
+            icon: "success",
+            title: "登录成功！",
+        });
+    } else if (messageType === "headIconUrl") {
+        let headIcon = document.getElementById("headIcon");
+        headIcon.setAttribute("src", msg_obj[1].user_icon);
+    } else if (messageType === "history_group") {
+        document.querySelector(".lite-chatbox").innerHTML = "";
+        let last = 0;
+        msg_obj.forEach((item) => {
+            if (item.msg_type) {
+                lastTime = 0;
+                return;
+            }
+            if (item.timestamp - last > 300000) {
+                let date = new Date(item.timestamp);
+                Y = date.getFullYear() + "/";
+                M = date.getMonth() + 1 + "/";
+                D = date.getDate() + " ";
+                h = date.getHours() + ":";
+                m =
+                    date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+                const tip = {
+                    messageType: "tipsNormal",
+                    html: Y + M + D + h + m,
+                };
+                addTip(".lite-chatbox", tip, "beforeend");
+                last = item.timestamp;
+                lastTime = last;
+            }
+            var chat_msg = {
+                messageType: "raw",
+                headIcon: item.user_icon,
+                name: item.nickname,
+                position: user_id === item.sender_id ? "right" : "left",
+                html: item.content,
+                user_id: item.sender_id,
+            };
+            addMessage(".lite-chatbox", chat_msg, "beforeend");
+        });
+        let chatBox = document.querySelector(".lite-chatbox");
+        setTimeout(function () {
+            if (chatBox.scrollHeight > chatBox.clientHeight) {
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }
+        }, 300);
+    } else if (messageType === "new_msg_group") {
+        if (
+            msg_obj[1].group_id != current_chat.id ||
+            current_chat.type != "group"
+        ) {
+            return;
+        }
+        let flag = false;
+        let chatBox = document.querySelector(".lite-chatbox");
+        scrollCheck =
+            Math.abs(
+                chatBox.scrollTop + chatBox.clientHeight - chatBox.scrollHeight
+            ) <= 60;
+        if (
+            chatBox.scrollHeight > chatBox.clientHeight &&
+            (scrollCheck || user_id === msg_obj[1].sender_id)
+        ) {
+            flag = true;
+        }
 
-    if (msg_obj[1].timestamp - lastTime > 300000) {
-      let date = new Date(msg_obj[1].timestamp);
-      Y = date.getFullYear() + "/";
-      M = date.getMonth() + 1 + "/";
-      D = date.getDate() + " ";
-      h = date.getHours() + ":";
-      m = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
-      const tip = {
-        messageType: "tipsNormal",
-        html: Y + M + D + h + m,
-      };
-      addTip(".lite-chatbox", tip, "beforeend");
-      lastTime = msg_obj[1].timestamp;
-    }
+        if (msg_obj[1].timestamp - lastTime > 300000) {
+            let date = new Date(msg_obj[1].timestamp);
+            Y = date.getFullYear() + "/";
+            M = date.getMonth() + 1 + "/";
+            D = date.getDate() + " ";
+            h = date.getHours() + ":";
+            m = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+            const tip = {
+                messageType: "tipsNormal",
+                html: Y + M + D + h + m,
+            };
+            addTip(".lite-chatbox", tip, "beforeend");
+            lastTime = msg_obj[1].timestamp;
+        }
 
-    var chat_msg = {
-      messageType: "raw",
-      headIcon: msg_obj[1].user_icon,
-      name: msg_obj[1].nickname,
-      position: user_id === msg_obj[1].sender_id ? "right" : "left",
-      html: msg_obj[1].content,
-      user_id: msg_obj[1].sender_id,
-    };
-    addMessage(".lite-chatbox", chat_msg, "beforeend");
-    setTimeout(function () {
-      if (flag) {
-        chatBox.scrollTop = chatBox.scrollHeight;
-      }
-    }, 300);
-  } else if (messageType === "add_group") {
-    if (msg_obj[1].result === "success") {
-      document.getElementById("chatList").innerHTML = `
+        var chat_msg = {
+            messageType: "raw",
+            headIcon: msg_obj[1].user_icon,
+            name: msg_obj[1].nickname,
+            position: user_id === msg_obj[1].sender_id ? "right" : "left",
+            html: msg_obj[1].content,
+            user_id: msg_obj[1].sender_id,
+        };
+        addMessage(".lite-chatbox", chat_msg, "beforeend");
+        setTimeout(function () {
+            if (flag) {
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }
+        }, 300);
+    } else if (messageType === "add_group") {
+        if (msg_obj[1].result === "success") {
+            document.getElementById("chatList").innerHTML = `
             <div class="chat-list-top">
                 <p>群聊</p>
             </div>
             `;
-      let msg_get_list = {
-        key: user_key,
-        user_id: user_id,
-        option: "get_list",
-      };
-      socket.send(JSON.stringify(msg_get_list));
-      Swal.fire({
-        title: "添加成功",
-        text: `成功进入群聊：${msg_obj[1].group_name}[${msg_obj[1].group_id}]`,
-        icon: "success",
-        heightAuto: false,
-      });
-    } else {
-      Swal.fire({
-        title: "添加失败!",
-        icon: "error",
-        heightAuto: false,
-      });
-    }
-  } else if (messageType === "create_group") {
-    if (msg_obj[1].result === "success") {
-      document.getElementById("chatList").innerHTML = `
+            let msg_get_list = {
+                key: user_key,
+                user_id: user_id,
+                option: "get_list",
+            };
+            socket.send(JSON.stringify(msg_get_list));
+            Swal.fire({
+                title: "添加成功",
+                text: `成功进入群聊：${msg_obj[1].group_name}[${msg_obj[1].group_id}]`,
+                icon: "success",
+                heightAuto: false,
+            });
+        } else {
+            Swal.fire({
+                title: "添加失败!",
+                icon: "error",
+                heightAuto: false,
+            });
+        }
+    } else if (messageType === "create_group") {
+        if (msg_obj[1].result === "success") {
+            document.getElementById("chatList").innerHTML = `
             <div class="chat-list-top">
                 <p>群聊</p>
             </div>
             `;
-      let msg_get_list = {
-        key: user_key,
-        user_id: user_id,
-        option: "get_list",
-      };
-      socket.send(JSON.stringify(msg_get_list));
-      Swal.fire({
-        title: "创建成功",
-        text: `群聊：${msg_obj[1].group_name}[${msg_obj[1].group_id}]`,
-        icon: "success",
-        heightAuto: false,
-      });
-    } else {
-      Swal.fire({
-        title: "创建失败!",
-        icon: "error",
-        heightAuto: false,
-      });
-    }
-  } else if (messageType === "exit_group") {
-    if (msg_obj[1].result === "success") {
-      document.getElementById("chatList").innerHTML = `
+            let msg_get_list = {
+                key: user_key,
+                user_id: user_id,
+                option: "get_list",
+            };
+            socket.send(JSON.stringify(msg_get_list));
+            Swal.fire({
+                title: "创建成功",
+                text: `群聊：${msg_obj[1].group_name}[${msg_obj[1].group_id}]`,
+                icon: "success",
+                heightAuto: false,
+            });
+        } else {
+            Swal.fire({
+                title: "创建失败!",
+                icon: "error",
+                heightAuto: false,
+            });
+        }
+    } else if (messageType === "exit_group") {
+        if (msg_obj[1].result === "success") {
+            document.getElementById("chatList").innerHTML = `
             <div class="chat-list-top">
                 <p>群聊</p>
             </div>
             `;
-      current_chat.id = undefined;
-      current_chat.name = undefined;
-      current_chat.type = undefined;
-      current_chat.item = undefined;
-      let msg_get_list = {
-        key: user_key,
-        user_id: user_id,
-        option: "get_list",
-      };
-      socket.send(JSON.stringify(msg_get_list));
-      document.getElementById("chatWindow").innerHTML = `
+            current_chat.id = undefined;
+            current_chat.name = undefined;
+            current_chat.type = undefined;
+            current_chat.item = undefined;
+            let msg_get_list = {
+                key: user_key,
+                user_id: user_id,
+                option: "get_list",
+            };
+            socket.send(JSON.stringify(msg_get_list));
+            document.getElementById("chatWindow").innerHTML = `
             <div class="initial-image">
                 <img src="img/chat.svg" alt="Initial Image">
             </div>
             `;
-      Swal.fire({
-        title: "退出成功",
-        icon: "success",
-        heightAuto: false,
-      });
-    } else {
-      Swal.fire({
-        title: "退出失败!",
-        icon: "error",
-        heightAuto: false,
-      });
+            Swal.fire({
+                title: "退出成功",
+                icon: "success",
+                heightAuto: false,
+            });
+        } else {
+            Swal.fire({
+                title: "退出失败!",
+                icon: "error",
+                heightAuto: false,
+            });
+        }
+    } else if (messageType === "key_verify") {
+        const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: false,
+        });
+        if (msg_obj[1].result === "key_error") {
+            Toast.fire({
+                icon: "error",
+                title: "key验证失败(key_error)!",
+            });
+        } else if (msg_obj[1].result === "server_error") {
+            Toast.fire({
+                icon: "error",
+                title: "key验证失败(server_error)!",
+            });
+        }
     }
-  } else if (messageType === "key_verify") {
-    const Toast = Swal.mixin({
-      toast: true,
-      position: "top-end",
-      showConfirmButton: false,
-      timer: 3000,
-      timerProgressBar: false,
-    });
-    if (msg_obj[1].result === "key_error") {
-      Toast.fire({
-        icon: "error",
-        title: "key验证失败(key_error)!",
-      });
-    } else if (msg_obj[1].result === "server_error") {
-      Toast.fire({
-        icon: "error",
-        title: "key验证失败(server_error)!",
-      });
-    }
-  }
 });
 
 function createChatItem(chat_item) {
-  const chatList = document.getElementById("chatList");
-  const newChatItem = document.createElement("div");
-  newChatItem.classList.add("chat-item");
-  newChatItem.innerHTML = `
+    const chatList = document.getElementById("chatList");
+    const newChatItem = document.createElement("div");
+    newChatItem.classList.add("chat-item");
+    newChatItem.innerHTML = `
       <div class="avatar" style="background: url(${chat_item.icon});background-size: cover;"></div>
       <div class="chat-name">${chat_item.name}</div>
     `;
-  chat_item.item = newChatItem;
-  if (current_chat.item !== undefined && current_chat.id === chat_item.id) {
-    current_chat.item = newChatItem;
-    current_chat.item.style.backgroundColor = "#f0f0f0";
-  }
-  newChatItem.onclick = function () {
-    switchChat(chat_item);
-  };
-  chatList.appendChild(newChatItem);
+    chat_item.item = newChatItem;
+    if (current_chat.item !== undefined && current_chat.id === chat_item.id) {
+        current_chat.item = newChatItem;
+        current_chat.item.style.backgroundColor = "#f0f0f0";
+    }
+    newChatItem.onclick = function () {
+        switchChat(chat_item);
+    };
+    chatList.appendChild(newChatItem);
 }
 
 function switchChat(chat_item) {
-  current_chat.type = chat_item.type;
-  current_chat.id = chat_item.id;
-  current_chat.name = chat_item.name;
+    current_chat.type = chat_item.type;
+    current_chat.id = chat_item.id;
+    current_chat.name = chat_item.name;
 
-  if (current_chat.item !== undefined) {
-    current_chat.item.style.backgroundColor = "";
-  }
+    if (current_chat.item !== undefined) {
+        current_chat.item.style.backgroundColor = "";
+    }
 
-  chat_item.item.style.backgroundColor = "#f0f0f0";
-  current_chat.item = chat_item.item;
+    chat_item.item.style.backgroundColor = "#f0f0f0";
+    current_chat.item = chat_item.item;
 
-  const chatWindow = document.getElementById("chatWindow");
-  const chatBox = document.querySelector(".lite-chatbox");
+    const chatWindow = document.getElementById("chatWindow");
+    const chatBox = document.querySelector(".lite-chatbox");
 
-  if (chatBox == null) {
-    chatWindow.innerHTML = "";
-    chatWindow.innerHTML = `
+    if (chatBox == null) {
+        chatWindow.innerHTML = "";
+        chatWindow.innerHTML = `
         <div class="top">
             <p id="top"></p>
             <img src="./img/x.svg" style="
@@ -377,93 +375,93 @@ function switchChat(chat_item) {
 </div>
         </div>
       `;
-    loadInput();
-    chatInput = document.querySelector(".chatinput");
+        loadInput();
+        chatInput = document.querySelector(".chatinput");
 
-    chatInput.addEventListener("blur", function (event) {
-      if (chatInput.innerHTML == "") {
+        chatInput.addEventListener("blur", function (event) {
+            if (chatInput.innerHTML == "") {
+                chatInput.innerHTML = inputNoticeText;
+                inputNoticeFlag = true;
+                chatInput.style.color = "gray";
+            }
+        });
+
+        chatInput.addEventListener("focus", function (event) {
+            if (inputNoticeFlag) {
+                chatInput.innerHTML = "";
+                chatInput.style.color = "black";
+                inputNoticeFlag = false;
+            }
+        });
+
+        var sendMessage = function () {
+            if (
+                document.querySelector(".chatinput").innerHTML == "" ||
+                inputNoticeFlag
+            )
+                return;
+            if (current_chat.type === "group") {
+                let msg = {
+                    option: "new_message_group",
+                    sender_id: user_id,
+                    group_id: current_chat.id,
+                    content: document.querySelector(".chatinput").innerHTML,
+                    user_id: user_id,
+                    key: user_key,
+                };
+                socket.send(JSON.stringify(msg));
+            }
+            document.querySelector(".chatinput").innerHTML = "";
+            document.querySelector(".chatinput").focus();
+        };
+        document
+            .querySelector(".chatinput")
+            .addEventListener("keydown", function (event) {
+                if (
+                    (event.ctrlKey || event.metaKey) &&
+                    (event.key === "Enter" || event.keyCode === 13)
+                ) {
+                    event.preventDefault();
+                    sendMessage();
+                }
+            });
+        document.querySelector(".send").onclick = sendMessage;
+        document.getElementById("exit_group").onclick = () => {
+            Swal.fire({
+                title: "确定要退出群聊？",
+                showDenyButton: true,
+                confirmButtonText: "确定",
+                denyButtonText: "取消",
+                heightAuto: false,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    let msg = {
+                        option: "exit_group",
+                        user_id: user_id,
+                        group_id: current_chat.id,
+                        key: user_key,
+                    };
+                    socket.send(JSON.stringify(msg));
+                }
+            });
+        };
+    } else {
+        chatBox.innerHTML = '<div class="loader child""></div>';
         chatInput.innerHTML = inputNoticeText;
         inputNoticeFlag = true;
         chatInput.style.color = "gray";
-      }
-    });
+    }
+    document.getElementById(
+        "top"
+    ).innerHTML = `${current_chat.name}(${current_chat.id})`;
+    document.querySelector(".lite-chatbox").focus();
 
-    chatInput.addEventListener("focus", function (event) {
-      if (inputNoticeFlag) {
-        chatInput.innerHTML = "";
-        chatInput.style.color = "black";
-        inputNoticeFlag = false;
-      }
-    });
-
-    var sendMessage = function () {
-      if (
-        document.querySelector(".chatinput").innerHTML == "" ||
-        inputNoticeFlag
-      )
-        return;
-      if (current_chat.type === "group") {
-        let msg = {
-          option: "new_message_group",
-          sender_id: user_id,
-          group_id: current_chat.id,
-          content: document.querySelector(".chatinput").innerHTML,
-          user_id: user_id,
-          key: user_key,
-        };
-        socket.send(JSON.stringify(msg));
-      }
-      document.querySelector(".chatinput").innerHTML = "";
-      document.querySelector(".chatinput").focus();
+    let msg_get_history = {
+        key: user_key,
+        user_id: user_id,
+        option: "get_history",
+        chat_type: current_chat.type,
+        chat_id: current_chat.id,
     };
-    document
-      .querySelector(".chatinput")
-      .addEventListener("keydown", function (event) {
-        if (
-          (event.ctrlKey || event.metaKey) &&
-          (event.key === "Enter" || event.keyCode === 13)
-        ) {
-          event.preventDefault();
-          sendMessage();
-        }
-      });
-    document.querySelector(".send").onclick = sendMessage;
-    document.getElementById("exit_group").onclick = () => {
-      Swal.fire({
-        title: "确定要退出群聊？",
-        showDenyButton: true,
-        confirmButtonText: "确定",
-        denyButtonText: "取消",
-        heightAuto: false,
-      }).then((result) => {
-        if (result.isConfirmed) {
-          let msg = {
-            option: "exit_group",
-            user_id: user_id,
-            group_id: current_chat.id,
-            key: user_key,
-          };
-          socket.send(JSON.stringify(msg));
-        }
-      });
-    };
-  } else {
-    chatBox.innerHTML = '<div class="loader child""></div>';
-    chatInput.innerHTML = inputNoticeText;
-    inputNoticeFlag = true;
-    chatInput.style.color = "gray";
-  }
-  document.getElementById(
-    "top"
-  ).innerHTML = `${current_chat.name}(${current_chat.id})`;
-  document.querySelector(".lite-chatbox").focus();
-
-  let msg_get_history = {
-    key: user_key,
-    user_id: user_id,
-    option: "get_history",
-    chat_type: current_chat.type,
-    chat_id: current_chat.id,
-  };
-  socket.send(JSON.stringify(msg_get_history));
+    socket.send(JSON.stringify(msg_get_history));
 }

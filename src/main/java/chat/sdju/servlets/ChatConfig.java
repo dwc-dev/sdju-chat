@@ -12,10 +12,19 @@ public class ChatConfig {
 
     private String profileImageUploadAddress;
 
+    private String picSiteUrl;
+
     public String getProfileImageUploadAddress() {
         return profileImageUploadAddress;
     }
 
+    public String getPicSiteUrl() {
+        return picSiteUrl;
+    }
+
+    public void setPicSiteUrl(String picSiteUrl) {
+        this.picSiteUrl = picSiteUrl;
+    }
 
     public void setProfileImageUploadAddress(String profileImageUploadAddress) {
         this.profileImageUploadAddress = profileImageUploadAddress;
@@ -77,6 +86,7 @@ public class ChatConfig {
                 ", mysqlPassword='" + mysqlPassword + '\'' +
                 ", mysqlDataBase='" + mysqlDataBase + '\'' +
                 ", profileImageUploadAddress='" + profileImageUploadAddress + '\'' +
+                ", picSiteUrl='" + picSiteUrl + '\'' +
                 '}';
     }
 }

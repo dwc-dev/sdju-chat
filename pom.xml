@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>chat.sdju</groupId>
-    <artifactId>Chat</artifactId>
+    <artifactId>sdju-chat</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>Chat</name>
+    <name>sdju-chat</name>
     <packaging>war</packaging>
 
     <properties>

@@ -10,7 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-@WebFilter(urlPatterns = {"/ChatMain/index.html", "/Login/index.html", "/index.html"})
+@WebFilter(urlPatterns = {"/ChatMain/index.jsp", "/Login/index.html", "/index.html"})
 public class LoginFilter extends HttpFilter {
     @Override
     protected void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws IOException, ServletException {
