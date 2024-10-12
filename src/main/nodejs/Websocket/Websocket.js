@@ -21,17 +21,17 @@ const con_mysql = mysql.createConnection({
 });
 
 const wss = new Websocket.Server({port: PORT});
-console.log(`WebSocket server listening on port ${PORT}`);
+console.log(`Websocket server listening on port ${PORT}`);
 
 var userId_ws_Map = new Map();
 var ws_userId_Map = new Map();
 
 con_mysql.connect((err) => {
     if (err) {
-        console.log("mysql connect error:\n", err);
+        console.log("Websocket server: mysql connect error:\n", err);
         process.exit(-1);
     }
-    console.log("mysql connect success!");
+    console.log("Websocket server: mysql connect success!");
 
     wss.on("connection", (ws) => {
         //console.log('Client connected');

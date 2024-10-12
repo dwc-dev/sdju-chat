@@ -6,11 +6,12 @@ const fs = require("fs");
 const app = express();
 
 app.set("view engine", "ejs");
+app.set('views', path.join(__dirname, 'views'));
 
 const WEBSITE = process.env.FILEMANAGER_SITE_URL;
 const PORT = 1001;
 
-const filenameMapPath = path.join(__dirname, "filenameMap.json");
+const filenameMapPath = path.join(__dirname, "files", "filenameMap.json");
 
 let filenameMap = {};
 
@@ -28,7 +29,7 @@ loadFilenameMap();
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        const uploadDir = "./files";
+        const uploadDir = path.join(__dirname, 'files');
         if (!fs.existsSync(uploadDir)) {
             fs.mkdirSync(uploadDir);
         }
@@ -138,7 +139,7 @@ app.use("/download_widget", (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`Server is running at http://localhost:${PORT}`);
+    console.log(`FileManager server listening on port ${PORT}`);
 });
 
 function formatFileSize(sizeInBytes) {
